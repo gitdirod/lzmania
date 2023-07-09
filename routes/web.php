@@ -17,19 +17,6 @@ use App\Http\Controllers\ConfirmCount;
 */
 
 
-// Confirm count
-Route::post('/confirm', [ConfirmCount::class, 'store']);
-Route::get('/login', function () {
-    return "ok";
-});
-// Route::get('/mostrar/{request}', function ($request) {
-
-//     return "lalalalala" . $request;
-// })->name('mostrar');
-
-Route::middleware('throttle:fourByHour')->group(function () {
-
-    Route::get('/mostrar', function () {
-        return "lalalalala";
-    })->name('mostrar');
+Route::get('/', function () {
+    return view('welcome');
 });
