@@ -134,7 +134,7 @@ Route::middleware('auth:sanctum')->put('/type_products/{type_product}', [TypePro
 
 // Groups
 Route::get('/groups', [GroupController::class, 'index']);
-Route::middleware('auth:sanctum')->post('/groups', [GroupController::class, 'store']);
+Route::post('/groups', [GroupController::class, 'store']);
 Route::get('/groups/{group}', [GroupController::class, 'show']);
 Route::middleware('auth:sanctum')->put('/groups/{group}', [GroupController::class, 'update']);
 
