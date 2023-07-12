@@ -100,10 +100,12 @@ class SizeController extends Controller
                 'message' => 'Usuario no autorizado'
             ];
         }
+        return $size;
         $size->delete();
         return [
             'state' => true,
-            'message' => 'Tamaño eliminado'
+            'message' => 'Tamaño eliminado',
+            'size' => $size
         ];
     }
 }

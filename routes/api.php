@@ -65,8 +65,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 
-    Route::apiResource('sizes', SizeController::class);
     Route::delete('sizes', [SizeController::class, 'destroy']);
+    Route::apiResource('sizes', SizeController::class);
 
     Route::apiResource('number_colors', NumberColorController::class);
 });
