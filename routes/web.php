@@ -21,5 +21,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('/test', function () {
-    return view('welcome');
+    return php_ini_loaded_file();
 });

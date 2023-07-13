@@ -116,24 +116,28 @@ class ProductController extends Controller
 
         $datos = $request->validated();
 
+
         if (isset($datos['images'])) {
             $product->insertImages($datos);
-            $product->deleteImages($datos);
+            $product->deleteImages($datos['deleted']);
             $product->updateProduct($datos);
             return [
                 'message' => "Producto actualizado",
-                'Product' => $product
+                // 'Product' => $product,
+                'state' => true
             ];
         }
 
         $imgs_stored = $product->images()->get();
         if (isset($datos['deleted'])) {
+
             if (count($imgs_stored) > count($datos['deleted'])) {
-                $product->deleteImages($datos);
+
+                $product->deleteImages($datos['deleted']);
                 $product->updateProduct($datos);
                 return [
                     'message' => "Producto actualizado",
-                    'Product' => $product
+                    'state' => true
                 ];
             } else {
                 return response()->json(array(

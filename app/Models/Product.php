@@ -140,17 +140,18 @@ class Product extends Model
             ]);
         }
     }
-    public function deleteImages(array $datos)
+    public function deleteImages($datos)
     {
-        if (isset($datos['deleted'])) {
-            foreach ($datos['deleted'] as $string) {
-                $obj = json_decode($string);
-                $path_file = "products/" . $obj->name;
-                if (File::exists($path_file)) {
-                    File::delete($path_file);
+        if (isset($datos)) {
+            foreach ($datos as $to_delete) {
+                $find_img = ProductImage::where('id', $to_delete['id'])->first();
+                if (isset($find_img)) {
+                    $path_file = "products/" . $find_img->name;
+                    if (File::exists($path_file)) {
+                        File::delete($path_file);
+                    }
+                    $find_img->delete();
                 }
-                $toDelete = ProductImage::find($obj->id);
-                $toDelete->delete();
             }
         }
     }

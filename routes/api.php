@@ -55,14 +55,15 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('/likes', LikeController::class);
 
+    Route::delete('payments', [PaymentController::class, 'destroy']);
     Route::apiResource('/payments', PaymentController::class);
 
-    Route::apiResource('order_payment', OrderPaymentController::class);
+
+    Route::apiResource('order_payments', OrderPaymentController::class);
 
     Route::apiResource('order_state', OrderStateController::class);
 
     Route::apiResource('addresses', AddressController::class);
-
 
 
     Route::delete('sizes', [SizeController::class, 'destroy']);
@@ -76,14 +77,6 @@ Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'ver
 
 // Confirm count
 Route::post('/confirm', [ConfirmCount::class, 'store']);
-
-// Sizes
-// Route::apiResource('sizes', SizeController::class)->except([
-//     'create', 'store', 'update', 'destroy'
-// ]);
-// Route::middleware('auth:sanctum')->post('sizes', [SizeController::class, 'store']);
-// Route::middleware('auth:sanctum')->put('sizes/{size}', [SizeController::class, 'update']);
-// Route::middleware('auth:sanctum')->put('sizes/{size}', [SizeController::class, 'destroy']);
 
 // Memories
 Route::apiResource('memories', MemoryController::class)->except([
