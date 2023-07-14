@@ -127,9 +127,9 @@ Route::get('/type_products/{type_product}', [TypeProductController::class, 'show
 Route::middleware('auth:sanctum')->put('/type_products/{type_product}', [TypeProductController::class, 'update']);
 
 // Groups
-Route::middleware('auth:sanctum')->get('/groups', [GroupController::class, 'index']);
+Route::get('/groups', [GroupController::class, 'index']);
 Route::middleware('auth:sanctum')->post('/groups', [GroupController::class, 'store']);
-Route::middleware('auth:sanctum')->get('/groups/{group}', [GroupController::class, 'show']);
+Route::get('/groups/{group}', [GroupController::class, 'show']);
 Route::middleware('auth:sanctum')->put('/groups/{group}', [GroupController::class, 'update']);
 
 // Groups
