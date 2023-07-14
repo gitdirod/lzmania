@@ -49,33 +49,6 @@ class TypeProductController extends Controller
             'state' => true,
             'data' => $typeProduct
         ];
-
-        // if (isset($datos["images"])) {
-        //     foreach ($datos['images'] as $image) {
-
-        //         $name_image = Str::uuid() . "." . $image->extension();
-        //         $image_server = ImageIntervention::make($image);
-
-        //         if ($image_server->width() > $image_server->height()) {
-        //             $image_server->widen(200);
-        //         } elseif ($image_server->height() > $image_server->width()) {
-        //             $image_server->heighten(200);
-        //         } else {
-        //             $image_server->resize(200, 200);
-        //         }
-        //         $image_path = public_path('icons') . '/' . $name_image;
-        //         $image_server->save($image_path);
-
-        //         // $image->move(public_path('icons'), $name_image);
-
-        //         $typeProduct = TypeProduct::create([
-        //             'name' => $datos['name'],
-        //             'image' => $name_image
-        //         ]);
-        //     }
-        // }
-
-
     }
 
     /**
@@ -113,27 +86,25 @@ class TypeProductController extends Controller
         $datos = $request->validated();
 
         if (isset($datos["images"])) {
-            $path_file = "icons/" . $typeProduct->image;
+            $path_file = "iconos/" . $typeProduct->image;
             if (File::exists($path_file)) {
                 File::delete($path_file);
             }
-
-            $image = head($datos["images"]);
-            $name_image = Str::uuid() . "." . $image->extension();
-            $image->move(public_path('icons'), $name_image);
-
-            $typeProduct->name = $datos["name"];
-            $typeProduct->image = $name_image;
+            $typeProduct->image = $typeProduct->insertImages($datos);
+            $typeProduct->name = $datos['name'];
             $typeProduct->save();
+
+            return [
+                'message' => "Tipo actualizado",
+                'state' => true,
+                'data' => $typeProduct
+            ];
         }
-
-        $typeProduct->name = $datos["name"];
+        $typeProduct->name = $datos['name'];
         $typeProduct->save();
-
         return [
             'message' => "Tipo actualizado",
             'state' => true,
-            'data' => $typeProduct
         ];
     }
 
