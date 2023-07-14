@@ -41,14 +41,30 @@ class TypeProductController extends Controller
 
         $datos = $request->validated();
         if (isset($datos["images"])) {
-            $image = head($datos["images"]);
-            $name_image = Str::uuid() . "." . $image->extension();
-            $image->move(public_path('icons'), $name_image);
+            foreach ($datos['images'] as $image) {
 
-            $typeProduct = TypeProduct::create([
-                'name' => $datos['name'],
-                'image' => $name_image
-            ]);
+                $image = head($datos["images"]);
+                $name_image = Str::uuid() . "." . $image->extension();
+
+                $image_server = ImageIntervention::make($image);
+                if ($image_server->width() > $image_server->height()) {
+                    $image_server->widen(64);
+                } elseif ($image_server->height() > $image_server->width()) {
+                    $image_server->heighten(64);
+                } else {
+                    $image_server->resize(64, 64);
+                }
+                $image_path = public_path('icons') . '/' . $name_image;
+                $image_server->save($image_path);
+
+                // $image->move(public_path('icons'), $name_image);
+
+                $typeProduct = TypeProduct::create([
+                    'name' => $datos['name'],
+                    'image' => $name_image
+                ]);
+                return true;
+            }
         }
 
         return [
