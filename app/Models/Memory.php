@@ -22,8 +22,10 @@ class Memory extends Model
     {
 
         foreach ($images as $image) {
+
             $name_image = Str::uuid() . "." . $image->extension();
             $image_server = ImageIntervention::make($image);
+
             if ($image_server->width() > $image_server->height()) {
                 $image_server->widen($width);
             } elseif ($image_server->height() > $image_server->width()) {

@@ -48,11 +48,11 @@ class TypeProductController extends Controller
                 $image_server = ImageIntervention::make($image);
 
                 if ($image_server->width() > $image_server->height()) {
-                    $image_server->widen(64);
+                    $image_server->widen(200);
                 } elseif ($image_server->height() > $image_server->width()) {
-                    $image_server->heighten(64);
+                    $image_server->heighten(200);
                 } else {
-                    $image_server->resize(64, 64);
+                    $image_server->resize(200, 200);
                 }
                 $image_path = public_path('icons') . '/' . $name_image;
                 $image_server->save($image_path);
@@ -63,7 +63,6 @@ class TypeProductController extends Controller
                     'name' => $datos['name'],
                     'image' => $name_image
                 ]);
-                return true;
             }
         }
 
