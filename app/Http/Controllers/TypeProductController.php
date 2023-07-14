@@ -43,10 +43,10 @@ class TypeProductController extends Controller
         if (isset($datos["images"])) {
             foreach ($datos['images'] as $image) {
 
-                $image = head($datos["images"]);
+                // $image = head($datos["images"]);
                 $name_image = Str::uuid() . "." . $image->extension();
-
                 $image_server = ImageIntervention::make($image);
+
                 if ($image_server->width() > $image_server->height()) {
                     $image_server->widen(64);
                 } elseif ($image_server->height() > $image_server->width()) {
