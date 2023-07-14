@@ -40,37 +40,42 @@ class TypeProductController extends Controller
         }
 
         $datos = $request->validated();
-        if (isset($datos["images"])) {
-            foreach ($datos['images'] as $image) {
 
-                // $image = head($datos["images"]);
-                $name_image = Str::uuid() . "." . $image->extension();
-                $image_server = ImageIntervention::make($image);
-
-                if ($image_server->width() > $image_server->height()) {
-                    $image_server->widen(200);
-                } elseif ($image_server->height() > $image_server->width()) {
-                    $image_server->heighten(200);
-                } else {
-                    $image_server->resize(200, 200);
-                }
-                $image_path = public_path('icons') . '/' . $name_image;
-                $image_server->save($image_path);
-
-                // $image->move(public_path('icons'), $name_image);
-
-                $typeProduct = TypeProduct::create([
-                    'name' => $datos['name'],
-                    'image' => $name_image
-                ]);
-            }
-        }
-
+        $typeProduct->image = $typeProduct->insertImages($datos);
+        $typeProduct->name = $datos['name'];
+        $typeProduct->save();
         return [
             'message' => "Tipo de producto creado.",
             'state' => true,
             'data' => $typeProduct
         ];
+
+        // if (isset($datos["images"])) {
+        //     foreach ($datos['images'] as $image) {
+
+        //         $name_image = Str::uuid() . "." . $image->extension();
+        //         $image_server = ImageIntervention::make($image);
+
+        //         if ($image_server->width() > $image_server->height()) {
+        //             $image_server->widen(200);
+        //         } elseif ($image_server->height() > $image_server->width()) {
+        //             $image_server->heighten(200);
+        //         } else {
+        //             $image_server->resize(200, 200);
+        //         }
+        //         $image_path = public_path('icons') . '/' . $name_image;
+        //         $image_server->save($image_path);
+
+        //         // $image->move(public_path('icons'), $name_image);
+
+        //         $typeProduct = TypeProduct::create([
+        //             'name' => $datos['name'],
+        //             'image' => $name_image
+        //         ]);
+        //     }
+        // }
+
+
     }
 
     /**
