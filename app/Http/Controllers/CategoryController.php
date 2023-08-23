@@ -60,6 +60,7 @@ class CategoryController extends Controller
         $category->insertImages($datos);
         return [
             'message' => "Categoría creada",
+            'state' => true
         ];
     }
 
