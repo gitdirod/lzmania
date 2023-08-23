@@ -16,9 +16,32 @@ class SuggestionController extends Controller
      */
     public function index()
     {
-        return [
-            "data" => Suggestion::all()
-        ];
+        $suggestions = Suggestion::all();
+
+        $suggestions = $suggestions->map(function ($suggestion) {
+            $suggesteds = $suggestion->suggesteds;
+
+            $products = $suggesteds->map(function ($suggested) {
+                $product = $suggested->product;
+                $product['images'] = $product->images;
+                $product['type_product'] = [
+                    'name' => $product->typeProduct->name,
+                    'image' => $product->typeProduct->image,
+                ];
+                $product['available'] = $product->units > 0 ? $product->available : false;
+                return $product;
+            });
+
+            return [
+                'id' => $suggestion->id,
+                'name' => $suggestion->name,
+                'products' => $products
+            ];
+        });
+        return response()->json(['data' => $suggestions]);
+        // return [
+        //     "data" => Suggestion::with('suggesteds.product')->get()
+        // ];
     }
 
     /**

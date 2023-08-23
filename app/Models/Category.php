@@ -23,6 +23,20 @@ class Category extends Model
     {
         return $this->belongsTo(Group::class);
     }
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'category_id');
+    }
+    public function isShowed()
+    {
+        $products = $this->products()->get();
+        $thereProducts = $products->filter(function ($product) {
+            return isset($product['units']) && $product['units'] > 0 && $product['available'] == true;
+        });
+
+        $isShow = $thereProducts->isNotEmpty();
+        return $isShow ? true : false;
+    }
     public function images()
     {
         return $this->hasMany(CategoryImage::class, 'category_id');

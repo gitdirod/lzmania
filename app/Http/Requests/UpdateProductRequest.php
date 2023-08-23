@@ -45,14 +45,14 @@ class UpdateProductRequest extends FormRequest
                 'required',
                 'numeric'
             ],
-            'price' => [
-                'required',
-                'numeric'
-            ],
-            'units' => [
-                'required',
-                'numeric'
-            ],
+            // 'price' => [
+            //     'required',
+            //     'numeric'
+            // ],
+            // 'units' => [
+            //     'required',
+            //     'numeric'
+            // ],
             'available' => [
                 'required',
                 'boolean'

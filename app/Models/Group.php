@@ -11,4 +11,19 @@ class Group extends Model
     protected $fillable = [
         'name'
     ];
+    public function categories()
+    {
+        return $this->hasMany(Category::class, 'group_id');
+    }
+    public function isShowed()
+    {
+        $categories = $this->categories()->get();
+
+        $thereCategories = $categories->filter(function ($category) {
+            return $category->isShowed();
+        });
+
+        $isShow = $thereCategories->isNotEmpty();
+        return $isShow ? true : false;
+    }
 }

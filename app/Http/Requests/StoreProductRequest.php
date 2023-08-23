@@ -45,14 +45,6 @@ class StoreProductRequest extends FormRequest
                 'required',
                 'numeric'
             ],
-            'price' => [
-                'required',
-                'numeric'
-            ],
-            'units' => [
-                'required',
-                'numeric'
-            ],
             'available' => [
                 'required',
                 'boolean'
@@ -65,7 +57,7 @@ class StoreProductRequest extends FormRequest
             'images' => [
                 'required',
                 'array',
-                'max:1'
+                'max:8'
             ],
             'images.*' => [
                 'required',
@@ -92,19 +84,17 @@ class StoreProductRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'El nombre es obligatorio',
-            'name.unique' => 'El nombre ya existe, usa otro',
-            'category.required' => 'La categoría es obligatoria',
-            'category.numeric' => 'La categoría debe ser valida',
-            'type.required' => 'El tipo es obligatorio',
-            'type.numeric' => 'El tipo debe ser valido',
-            'price.required' => 'El precio es obligatorio',
-            'price.numeric' => 'El precio debe ser numérico',
-            'units.required' => 'Las unidades son obligatorias',
-            'units.numeric' => 'Las unidades deben ser numéricas',
-            'description.required' => 'La descripción es obligatoria',
-            'images.required' => 'La imagen es obligatoria',
-            'images.*.distinct' => 'Imagenes repetidas',
+            'name.required' => 'Nombre es obligatorio.',
+            'name.unique' => 'Nombre ya existe, usa otro.',
+            'code.required' => 'Código es obligatorio.',
+            'code.unique' => 'Código existente, usa otro.',
+            'category.required' => 'Categoría es obligatoria.',
+            'category.numeric' => 'Categoría invalida.',
+            'type.required' => 'Tipo de producto es obligatorio',
+            'type.numeric' => 'Tipo de producto invalido',
+            'description.required' => 'Descripción es obligatoria.',
+            'images.required' => 'Carga al menos una imagen.',
+            'images.*.distinct' => 'Imagenes repetidas.',
         ];
     }
 }

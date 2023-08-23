@@ -2,11 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Group;
-use App\Models\Product;
-use App\Models\Category;
-use App\Models\Suggestion;
-use App\Models\TypeProduct;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SuggestedResource extends JsonResource
@@ -19,37 +14,40 @@ class SuggestedResource extends JsonResource
      */
     public function toArray($request)
     {
-        // return parent::toArray($request);
-        $suggestion = Suggestion::find($this->suggestion_id);
-        $product = Product::find($this->product_id);
-        $type_product = TypeProduct::find($product->type_product_id);
-        $category = Category::find($product->category_id);
-        $group = Group::find($category->group_id);
-        $price = $product->price()->select('price')->get();
+        $type_product = $this->product->typeProduct;
+        $product = $this->product;
+        $category = $this->product->category;
+        $group = $this->product->category->group;
+
         return [
-            'suggested_id' => $this->id,
-            'suggestion_id' => $suggestion->id,
-            'suggestion_name' => $suggestion->name,
+            'suggestion' => [
+                'id' => $this->suggestion->id,
+                'name' => $this->suggestion->name,
+            ],
+            'category' => [
+                'id' => $category->id,
+                'name' => $category->name,
+            ],
+            'type_product' => [
+                'id' => $type_product->id,
+                'name' => $type_product->name,
+                'image' => $type_product->image,
+            ],
+            'group' => [
+                'id' => $group->id,
+                'name' => $group->name
+            ],
+
             'id' => $product->id,
-            'category_id' => $product->category_id,
-            'type_product_id' => $product->type_product_id,
-            'type_image' => $type_product->image,
-            'group_id' => $group->id,
-
-            'category_name' => $category->name,
-            'product_type_name' => $type_product->name,
-            'group_name' => $group->name,
-
-            'remaining_products' => $product->remaining_products(),
+            'suggested_id' => $this->id,
             'new' => $product->is_new(),
 
             'name' => $product->name,
             'code' => $product->code,
-            'price' => $price->value('price'),
+            'price' => $product->price,
             'units' => $product->units,
             'description' => $product->description,
-            'available' => $product->available,
-            'image' => $product->image()->select('name')->value('name'),
+            'available' => $product->units > 0 ? $product->available : false,
             'images' => $product->images()->select('id', 'name')->get(),
 
         ];

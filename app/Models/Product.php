@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 use App\Models\OrderProduct;
 use App\Models\ProductImage;
 use App\Models\ProductPrice;
+use App\Models\PurchaseProduct;
 use Illuminate\Support\Facades\File;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -40,7 +41,7 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
-    public function type()
+    public function typeProduct()
     {
         return $this->belongsTo(TypeProduct::class, 'type_product_id');
     }
@@ -61,30 +62,14 @@ class Product extends Model
     {
         return $this->hasOne(ProductImage::class, 'product_id')->latestOfMany();
     }
-    public function price()
+
+    public function purchaseProducts()
     {
-        return $this->hasOne(ProductPrice::class, 'product_id')->latestOfMany();
+        return $this->hasMany(PurchaseProduct::class, 'product_id')->with('purchase');
     }
-    // One to Many
-    public function purchased()
+    public function orderProducts()
     {
         return $this->hasMany(OrderProduct::class, 'product_id');
-    }
-
-    public function remaining_products()
-    {
-        $purchased = $this->purchased()->get();
-        $suma = 0;
-        if (is_Object($purchased)) {
-            foreach ($purchased as $purch) {
-                $order = Order::find($purch->order_id);
-                $order_payment = $order->payment()->first();
-                if ($order_payment->state === 'PAGADO') {
-                    $suma += $purch->quantity;
-                }
-            }
-        }
-        return $this->units - $suma;
     }
 
     public function likes()
@@ -97,12 +82,10 @@ class Product extends Model
 
     public function updateProduct(array $toUpdate)
     {
-        $category = Category::find($toUpdate["category"]);
         $this->name = $toUpdate["name"];
         $this->code = $toUpdate["code"];
         $this->category_id = $toUpdate["category"];
         $this->type_product_id = $toUpdate["type"];
-        $this->units = $toUpdate["units"];
         $this->description = $toUpdate["description"];
         $this->available = $toUpdate["available"];
 
@@ -110,15 +93,61 @@ class Product extends Model
         $this->weight = $toUpdate["weight"];
         $this->number_color = $toUpdate["number_color"];
         $this->save();
-
-        ProductPrice::create([
-            'product_id' => $this->id,
-            'price' => $toUpdate["price"],
-        ]);
-
-        // $this->image = $category->image;
-        // $this->price = $toUpdate["price"];
     }
+
+    public function remaining_products()
+    {
+        $sold = $this->orderProducts()->get();
+        $suma = 0;
+        if (is_Object($sold)) {
+            foreach ($sold as $sol) {
+                $order = Order::find($sol->order_id);
+                $order_payment = $order->payment()->first();
+                if ($order_payment->state === 'PAGADO') {
+                    $suma += $sol->quantity;
+                }
+            }
+        }
+        return $this->units - $suma;
+    }
+
+    public function updateUnits()
+    {
+        // Actualiza total ingresado "Compras"
+        $purchased_list = PurchaseProduct::where('product_id', $this->id)->pluck('quantity')->toArray();
+        $purchased_total = array_sum($purchased_list);
+        $this->purchased = $purchased_total;
+        // $this->save();
+
+        // Actualiza total egresado "ventas"
+        $sold = $this->orderProducts()->get();
+        $salida = 0;
+        if (is_Object($sold)) {
+            foreach ($sold as $sol) {
+                $order = Order::find($sol->order_id);
+                $order_payment = $order->payment()->first();
+                if ($order_payment->state === 'PAGADO') {
+                    $salida += $sol->quantity;
+                }
+            }
+        }
+        $this->sold = $salida;
+
+        // Actualiza total disponible "inventario"
+        $this->units = $purchased_total - $salida;
+        $this->save();
+    }
+    public function updatePrice()
+    {
+        $purchased_list = PurchaseProduct::where('product_id', $this->id)
+            ->orderBy('purchase_id', 'desc')
+            ->get();
+
+        $last_price = $purchased_list->first();
+        $this->price = $last_price->price;
+        $this->save();
+    }
+
     public function insertImages(array $datos)
     {
         foreach ($datos['images'] as $image) {

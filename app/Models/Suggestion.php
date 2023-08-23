@@ -12,4 +12,9 @@ class Suggestion extends Model
     protected $fillable = [
         'name',
     ];
+
+    public function suggesteds()
+    {
+        return $this->hasMany(Suggested::class);
+    }
 }

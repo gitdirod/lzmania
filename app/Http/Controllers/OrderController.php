@@ -27,7 +27,7 @@ class OrderController extends Controller
 
         if (Auth::user() && Auth::user()->role == 'admin') {
             return new OrderCollection(
-                Order::with('user', 'products', 'payment', 'state', 'paymentImages', 'addresses')
+                Order::with('user', 'products', 'payment', 'state', 'paymentImages', 'addresses', 'addresses_envoice', 'addresses_payment')
                     ->orderBy('id', 'DESC')
                     ->get()
             );
@@ -71,6 +71,7 @@ class OrderController extends Controller
             return [
                 'message' => 'Productos faltantes en bodega',
                 'state' => false,
+                // 'tw' => !$order->checkQuantityProducts($datos['products'])
             ];
         }
         $order->user_id = Auth::user()->id;
@@ -140,7 +141,16 @@ class OrderController extends Controller
             ];
         }
         $datos = $request->validated();
-        $order->envoice = $datos['envoice'];
+
+        // return $order->updateProductsUnits();
+        $order->updatePayment((int)$datos['payment']);
+        $order->updateState((int)$datos['state']);
+        $order->updateProductsUnits();
+
+        if (isset($datos['envoice'])) {
+            $order->envoice = $datos['envoice'];
+        }
+
         $order->save();
         return [
             'state' => true,

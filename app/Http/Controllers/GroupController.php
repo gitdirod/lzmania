@@ -6,13 +6,28 @@ use App\Http\Requests\StoreGroupRequest;
 use App\Models\Group;
 use App\Http\Resources\GroupCollection;
 use App\Http\Requests\UpdateGroupRequest;
-
+use App\Models\Category;
 
 class GroupController extends Controller
 {
     public function index()
     {
         // return response()->json(['groups' => Group::all()]);
+        // $groups = Group::all();
+
+        // $groups = $groups->map(function ($group) {
+        //     $categories = $group->categories;
+        //     $categories = $categories->map(function ($category) {
+        //         return $category->products()->get();
+        //     });
+        //     return [
+        //         'id' => $group->id,
+        //         'name' => $group->name,
+        //         'show' => $categories
+        //     ];
+        // });
+        // return response()->json(['data' => $groups]);
+
         return new GroupCollection(Group::all());
     }
 

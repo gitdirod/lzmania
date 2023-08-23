@@ -64,12 +64,12 @@ class OrderStateController extends Controller
         //     "id" => $datos['id'],
         // ];
         // return gettype((int)$datos['state']);
-        if ((int)$datos['state'] == 1) {
-            $order_state->state = "ENTREGADO";
-        } elseif ((int)$datos['state'] == 0) {
+        if ((int)$datos['state'] == 0) {
             $order_state->state = "EN BODEGA";
-        } elseif ((int)$datos['state'] == 2) {
+        } elseif ((int)$datos['state'] == 1) {
             $order_state->state = "EN TRAYECTO";
+        } elseif ((int)$datos['state'] == 2) {
+            $order_state->state = "ENTREGADO";
         } else {
             return [
                 "message" => "Peticion invalida",

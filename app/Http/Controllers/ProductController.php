@@ -47,18 +47,20 @@ class ProductController extends Controller
             "code" => $datos["code"],
             "category_id" => $datos["category"],
             "type_product_id" => $datos["type"],
-            "units" => $datos["units"],
             "description" => $datos["description"],
             "available" => $datos["available"],
+            "units" => 0,
+            "sold" => 0,
+            "purchased" => 0,
             "weight" => $datos["weight"],
             "size" => $datos["size"],
             "number_color" => $datos["number_color"],
             "user" => $user
         ]);
-        ProductPrice::create([
-            'product_id' => $product->id,
-            'price' => $datos["price"],
-        ]);
+        // ProductPrice::create([
+        //     'product_id' => $product->id,
+        //     'price' => $datos["price"],
+        // ]);
         $product->insertImages($datos);
         return [
             'message' => "Producto creado",
@@ -76,11 +78,10 @@ class ProductController extends Controller
     {
         $category = Category::find($product->category_id);
         $group = $category->group()->get();
-        $price = $product->price()->select('price')->get();
         return [
             'id' => $product->id,
             'name' => $product->name,
-            'price' => $price->value('price'),
+            'price' => $product->price,
             'description' => $product->description,
             'units' => $product->units,
             'code' => $product->code,
@@ -119,13 +120,15 @@ class ProductController extends Controller
 
         if (isset($datos['images'])) {
             $product->insertImages($datos);
-            $product->deleteImages($datos['deleted']);
-            $product->updateProduct($datos);
-            return [
-                'message' => "Producto actualizado",
-                // 'Product' => $product,
-                'state' => true
-            ];
+            // if(isset($datos['deleted'])){
+            //     $product->deleteImages($datos['deleted']);
+            // }
+            // $product->updateProduct($datos);
+            // return [
+            //     'message' => "Producto actualizado",
+            //     // 'Product' => $product,
+            //     'state' => true
+            // ];
         }
 
         $imgs_stored = $product->images()->get();
@@ -134,11 +137,11 @@ class ProductController extends Controller
             if (count($imgs_stored) > count($datos['deleted'])) {
 
                 $product->deleteImages($datos['deleted']);
-                $product->updateProduct($datos);
-                return [
-                    'message' => "Producto actualizado",
-                    'state' => true
-                ];
+                // $product->updateProduct($datos);
+                // return [
+                //     'message' => "Producto actualizado",
+                //     'state' => true
+                // ];
             } else {
                 return response()->json(array(
                     'message' => "El producto debe tener al menos una imagen.",

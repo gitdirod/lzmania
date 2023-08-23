@@ -22,7 +22,8 @@ class CategoryResource extends JsonResource
             'id' => $this->id,
             'image' => $this->image,
             'name'  => $this->name,
-            'images' => $this->images()->select('id', 'name')->get()
+            'images' => $this->images()->select('id', 'name')->get(),
+            'show' => $this->isShowed(),
         ];
     }
 }

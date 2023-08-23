@@ -27,6 +27,8 @@ use App\Http\Controllers\LandingImageController;
 use App\Http\Controllers\OrderPaymentController;
 use App\Http\Controllers\ProductImageController;
 use App\Http\Controllers\EmailVerificationController;
+use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\PurchaseController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 /*
@@ -52,6 +54,7 @@ Route::middleware('auth:sanctum')->group(function () {
     //Almacenar ordenes
 
     Route::apiResource('orders', OrderController::class);
+    Route::apiResource('purchases', PurchaseController::class);
 
     Route::apiResource('/likes', LikeController::class);
 
@@ -70,6 +73,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('sizes', SizeController::class);
 
     Route::apiResource('number_colors', NumberColorController::class);
+
+    Route::apiResource('inventory', InventoryController::class);
 });
 Route::post('email/verification-notification', [EmailVerificationController::class, 'sendVerificationEmail'])->middleware('throttle:fourByHour', 'auth:sanctum',)->name('verification.send');
 Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'verify'])->middleware(['throttle:2'])->name('verification.verify');

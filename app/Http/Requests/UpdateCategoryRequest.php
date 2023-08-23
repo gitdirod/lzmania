@@ -26,7 +26,7 @@ class UpdateCategoryRequest extends FormRequest
         return [
             'name' => [
                 'required',
-                'unique:categories,name,' .$this->category->id,
+                'unique:categories,name,' . $this->category->id,
                 'string',
                 'max:255'
             ],
@@ -38,21 +38,20 @@ class UpdateCategoryRequest extends FormRequest
                 'max:1'
             ],
             'images.*' => [
-                    'required',
-                    'image',
-                    'distinct'
+                'required',
+                'image',
+                'distinct'
             ],
             'group_id' => [
                 'required',
                 'numeric',
-                'max:8'
             ]
 
         ];
     }
     public function messages()
     {
-        return[
+        return [
             'name.required' => 'El nombre es obligatorio',
             'name.unique' => 'El nombre ya existe, usa otro',
             'images.required' => 'La imagen es requerida',
@@ -60,6 +59,5 @@ class UpdateCategoryRequest extends FormRequest
             'group_id.required' => 'El grupo es obligatorio',
             'group_id.numeric' => 'El grupo debe ser valido'
         ];
-
     }
 }

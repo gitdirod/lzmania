@@ -28,7 +28,7 @@ class Order extends Model
 
     public function products()
     {
-        return $this->belongsToMany(Product::class, 'order_products')->withPivot('quantity', 'subtotal', 'price')->with('images');
+        return $this->belongsToMany(Product::class, 'order_products')->withPivot('quantity', 'subtotal', 'price')->with('image');
     }
     public function payment()
     {
@@ -45,6 +45,20 @@ class Order extends Model
     public function addresses()
     {
         return $this->hasMany(OrderAddress::class, 'order_id')->latest();
+    }
+    public function addresses_envoice()
+    {
+        return $this->hasOne(OrderAddress::class, 'order_id')
+            ->where('envoice', 1)
+            ->orderByDesc('created_at')
+            ->limit(1);
+    }
+    public function addresses_payment()
+    {
+        return $this->hasOne(OrderAddress::class, 'order_id')
+            ->where('envoice', 0)
+            ->orderByDesc('created_at')
+            ->limit(1);
     }
 
     public function insertImages($images)
@@ -72,20 +86,104 @@ class Order extends Model
         }
     }
 
-    public function insertPayment()
+    public function insertPayment($value = "POR PAGAR")
     {
         OrderPayment::create([
             'order_id' => $this->id,
-            'state' => "POR PAGAR",
+            'state' => $value,
         ]);
     }
-    public function insertState()
+
+    public function insertState($value = "EN BODEGA")
     {
         OrderState::create([
             'order_id' => $this->id,
-            'state' => "EN BODEGA",
+            'state' => $value,
         ]);
     }
+
+    public function updatePayment($value)
+    {
+        $find_payment = null;
+        if (isset($this->payment->order_id)) {
+            OrderPayment::where('order_id', $this->payment->order_id)->first();
+        }
+
+        if (isset($find_payment)) {
+            $payment = OrderPayment::find($find_payment->id);
+            if ($value == 1) {
+                $payment->state = "PAGADO";
+                $payment->save();
+                return true;
+            } elseif ($value == 0) {
+                $payment->state = "POR PAGAR";
+                $payment->save();
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            if ($value == 1) {
+                $this->insertPayment("PAGADO");
+                return true;
+            } elseif ($value == 0) {
+                $this->insertPayment("POR PAGAR");
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    public function updateProductsUnits()
+    {
+        $products = $this->products()->get();
+        foreach ($products as $pro) {
+            $product = Product::find($pro->id);
+            $product->updateUnits();
+        }
+    }
+
+    public function updateState($value)
+    {
+        $find_state = null;
+        if (isset($this->state->order_id)) {
+            OrderState::where('order_id', $this->state->order_id)->first();
+        }
+
+        if (isset($find_state)) {
+            $state = OrderState::find($find_state->id);
+            if ($value == 0) {
+                $state->state = "EN BODEGA";
+                $state->save();
+                return true;
+            } elseif ($value == 1) {
+                $state->state = "EN TRAYECTO";
+                $state->save();
+                return true;
+            } elseif ($value == 2) {
+                $state->state = "ENTREGADO";
+                $state->save();
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+
+            if ($value == 0) {
+                $this->insertState("EN BODEGA");
+                return true;
+            } elseif ($value == 1) {
+                $this->insertState("EN TRAYECTO");
+                return true;
+            } elseif ($value == 2) {
+                $this->insertState("ENTREGADO");
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
     public function insertAddress($address_id)
     {
         $find_address_send = Address::where('id', $address_id)->first();
@@ -111,20 +209,21 @@ class Order extends Model
             $find_pro = Product::where('id', $product['id'])->first();
             if (isset($find_pro)) {
                 $pro = Product::find($product['id']);
-                $price = (int)$pro->price()->select('price')->value('price');
 
                 $unit = new Unit;
                 $unit->product_id = $pro->id;
                 $unit->quantity = (int)$product['quantity'];
                 $unit->order_id = $this->id;
                 $unit->save();
-
+                // number_format((float)$product['price'], 2, '.', '');
                 $Array_products[] = [
                     'order_id' => $this->id,
                     'product_id' => $pro->id,
                     'quantity' => (int)$product['quantity'],
-                    'price' => $price,
-                    'subtotal' => $price * $product['quantity'],
+                    // 'price' => $pro->price,
+                    'price' => number_format((float)$pro->price, 2, '.', ''),
+                    // 'subtotal' => $pro->price * $product['quantity'],
+                    'subtotal' => number_format((float)($pro->price * $product['quantity']), 2, '.', ''),
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
                 ];
@@ -142,7 +241,7 @@ class Order extends Model
             if (isset($find_pro)) {
 
                 $pro = Product::find($product['id']);
-                if (($pro->remaining_products() < (int)$product['quantity'])) {
+                if (((int)$pro->units > (int)$product['quantity'])) {
                     return false;
                 }
             } else {
