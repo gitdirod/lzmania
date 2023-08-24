@@ -26,7 +26,8 @@ class UpdateCategoryRequest extends FormRequest
         return [
             'name' => [
                 'required',
-                'unique:categories,name,' . $this->category->id,
+                // 'unique:categories,name,' . $this->category->id,
+                'unique_within_group:categories,name,' . $this->group_id, // Aquí usamos la nueva regla
                 'string',
                 'max:255'
             ],
@@ -54,6 +55,7 @@ class UpdateCategoryRequest extends FormRequest
         return [
             'name.required' => 'El nombre es obligatorio',
             'name.unique' => 'El nombre ya existe, usa otro',
+            'name.unique_within_group' => "El nombre ya existe para el grupo",
             'images.required' => 'La imagen es requerida',
             'images.max' => 'Solo puedes cargar una imagen',
             'group_id.required' => 'El grupo es obligatorio',
