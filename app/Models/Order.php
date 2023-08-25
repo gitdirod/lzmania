@@ -234,17 +234,34 @@ class Order extends Model
         return $Array_products;
     }
 
+    // public function checkQuantityProducts($products)
+    // {
+    //     foreach ($products as $product) {
+    //         $find_pro = Product::where('id', $product['id'])->first();
+    //         if (isset($find_pro)) {
+
+    //             $pro = Product::find($product['id']);
+    //             if (((int)$pro->units >= (int)$product['quantity'])) {
+    //                 return true;
+    //             } else {
+    //                 return false;
+    //             }
+    //         } else {
+    //             return false;
+    //         }
+    //     }
+    //     return true;
+    // }
     public function checkQuantityProducts($products)
     {
         foreach ($products as $product) {
-            $find_pro = Product::where('id', $product['id'])->first();
-            if (isset($find_pro)) {
+            $pro = Product::find($product['id']);
 
-                $pro = Product::find($product['id']);
-                if (((int)$pro->units > (int)$product['quantity'])) {
-                    return false;
-                }
-            } else {
+            if (!$pro) {
+                return false;
+            }
+
+            if ((int) $pro->units < (int) $product['quantity']) {
                 return false;
             }
         }
