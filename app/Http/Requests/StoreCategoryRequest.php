@@ -26,13 +26,17 @@ class StoreCategoryRequest extends FormRequest
         return [
             'name' => [
                 'required',
-                'unique:products',
+                'unique_name_within_group_for_create:categories,name,' . $this->group_id,
                 'string',
                 'max:255'
             ],
             'group_id' => [
                 'required',
                 'numeric'
+            ],
+            'suggested' => [
+                'required',
+                'boolean'
             ],
             'images' => [
                 'required',

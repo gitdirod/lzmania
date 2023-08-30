@@ -22,6 +22,7 @@ class CategoryResource extends JsonResource
             'id' => $this->id,
             'image' => $this->image,
             'name'  => $this->name,
+            'suggested' => $this->isShowed() ? $this->suggested : false,
             'images' => $this->images()->select('id', 'name')->get(),
             'show' => $this->isShowed(),
         ];

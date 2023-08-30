@@ -26,10 +26,13 @@ class UpdateCategoryRequest extends FormRequest
         return [
             'name' => [
                 'required',
-                // 'unique:categories,name,' . $this->category->id,
-                'unique_within_group:categories,name,' . $this->group_id, // Aquí usamos la nueva regla
+                'unique_name_within_group_for_update:categories,name,' . $this->group_id . ',' . $this->category->id,
                 'string',
                 'max:255'
+            ],
+            'suggested' => [
+                'required',
+                'boolean'
             ],
             'images' => [
                 'sometimes',

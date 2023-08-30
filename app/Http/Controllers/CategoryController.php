@@ -55,7 +55,8 @@ class CategoryController extends Controller
         $datos = $request->validated();
         $category = Category::create([
             'name' => $datos['name'],
-            'group_id' => $datos['group_id']
+            'group_id' => $datos['group_id'],
+            'suggested' => (bool)($datos['suggested'] ?? false),
         ]);
         $category->insertImages($datos);
         return [

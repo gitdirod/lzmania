@@ -16,7 +16,8 @@ class Category extends Model
     protected $fillable = [
         'name',
         'image',
-        'group_id'
+        'group_id',
+        'suggested'
     ];
 
     public function group()
@@ -45,6 +46,7 @@ class Category extends Model
     {
         $this->name = $toUpdate["name"];
         $this->group_id = $toUpdate["group_id"];
+        $this->suggested = (bool)($toUpdate['suggested'] ?? false);
         $this->save();
     }
     public function insertImages(array $datos)
