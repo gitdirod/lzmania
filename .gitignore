@@ -2,6 +2,11 @@
 /public/build
 /public/hot
 /public/storage
+/public/categories/*
+/public/iconos/*
+/public/landings/*
+/public/products/*
+/public/payments/*
 /storage/*.key
 /vendor
 .env
