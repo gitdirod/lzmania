@@ -2,11 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\AdsYoutubeCollection;
 use App\Models\AdsYoutube;
+use App\Services\AdsYoutubeService;
+use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
+
+
 
 class AdsYoutubeController extends Controller
 {
+    use ApiResponse;
+    protected $adsYoutubeService;
+
+
+    public function __construct(AdsYoutubeService $adsYoutubeService)
+    {
+        // Se aplica el middleware de autenticación a todos los métodos excepto 'index' y 'show'
+        $this->middleware('auth')->except(['index', 'show']);
+
+        // Asegura que el usuario puede realizar acciones de administrador solo para los métodos 'store' y 'update'
+        $this->middleware('can:admin')->only(['store', 'update', 'destroy']);
+        $this->adsYoutubeService = $adsYoutubeService;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +32,9 @@ class AdsYoutubeController extends Controller
      */
     public function index()
     {
-        //
+        $adsYoutube = new AdsYoutubeCollection(AdsYoutube::all());
+        return $this->successResponse("Grupos recuperados con exito.", $adsYoutube);
+
     }
 
     /**
