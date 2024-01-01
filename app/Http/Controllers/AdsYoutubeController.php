@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\AdsYoutubeCollection;
 use App\Models\AdsYoutube;
-use App\Services\AdsYoutubeService;
 use App\Traits\ApiResponse;
+use App\Http\Resources\AdsYoutubeCollection;
+use App\Services\AdsYoutubeService;
 use Illuminate\Http\Request;
 
 
@@ -33,7 +33,7 @@ class AdsYoutubeController extends Controller
     public function index()
     {
         $adsYoutube = new AdsYoutubeCollection(AdsYoutube::all());
-        return $this->successResponse("Grupos recuperados con exito.", $adsYoutube);
+        return $this->successResponse("Ads recuperados con exito.", $adsYoutube);
 
     }
 

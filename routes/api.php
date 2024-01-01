@@ -1,35 +1,37 @@
 <?php
 
-use App\Models\User;
-use App\Models\Memory;
-use Illuminate\Http\Request;
-use App\Http\Resources\UserResource;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ConfirmCount;
-use App\Http\Resources\UserCollection;
-use App\Http\Resources\ProductResource;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\LikeController;
-use App\Http\Controllers\SizeController;
-use App\Http\Controllers\GroupController;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\MemoryController;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\AdsYoutubeController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ConfirmCount;
+use App\Http\Controllers\EmailVerificationController;
+use App\Http\Controllers\GroupController;
+use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\LandingImageController;
+use App\Http\Controllers\LikeController;
+use App\Http\Controllers\MemoryController;
+use App\Http\Controllers\NumberColorController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrderPaymentController;
+use App\Http\Controllers\OrderStateController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\SuggestedController;
-use App\Http\Controllers\OrderStateController;
-use App\Http\Controllers\SuggestionController;
-use App\Http\Controllers\NumberColorController;
-use App\Http\Controllers\TypeProductController;
-use App\Http\Controllers\LandingImageController;
-use App\Http\Controllers\OrderPaymentController;
 use App\Http\Controllers\ProductImageController;
-use App\Http\Controllers\EmailVerificationController;
-use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\SizeController;
+use App\Http\Controllers\SuggestedController;
+use App\Http\Controllers\SuggestionController;
+use App\Http\Controllers\TypeProductController;
+use App\Http\Resources\ProductResource;
+use App\Http\Resources\UserCollection;
+use App\Http\Resources\UserResource;
+use App\Models\Memory;
+use App\Models\User;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -75,11 +77,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('number_colors', NumberColorController::class);
 
     Route::apiResource('inventory', InventoryController::class);
+
+
 });
 Route::post('email/verification-notification', [EmailVerificationController::class, 'sendVerificationEmail'])->middleware('throttle:fourByHour', 'auth:sanctum',)->name('verification.send');
 Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'verify'])->middleware(['throttle:2'])->name('verification.verify');
 
-
+Route::apiResource('ads', AdsYoutubeController::class);
 // Confirm count
 Route::post('/confirm', [ConfirmCount::class, 'store']);
 
