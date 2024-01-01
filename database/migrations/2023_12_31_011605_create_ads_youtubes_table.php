@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('ads_youtubes', function (Blueprint $table) {
             $table->id();
+            $table->string('url');
+            $table->string('name');
             $table->timestamps();
         });
     }
