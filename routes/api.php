@@ -78,12 +78,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('inventory', InventoryController::class);
 
+    Route::apiResource('ads_youtube', AdsYoutubeController::class);
 
 });
 Route::post('email/verification-notification', [EmailVerificationController::class, 'sendVerificationEmail'])->middleware('throttle:fourByHour', 'auth:sanctum',)->name('verification.send');
 Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'verify'])->middleware(['throttle:2'])->name('verification.verify');
 
-Route::apiResource('ads', AdsYoutubeController::class);
 // Confirm count
 Route::post('/confirm', [ConfirmCount::class, 'store']);
 
