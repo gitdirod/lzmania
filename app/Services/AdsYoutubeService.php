@@ -8,7 +8,7 @@ class AdsYoutubeService
 {
     public function createAdsYoutube($name, $url)
     {
-        return createAdsYoutube::create([
+        return AdsYoutube::create([
             'name' => $name,
             'url' => $url
         ]);
@@ -16,10 +16,10 @@ class AdsYoutubeService
 
     public function updateAdsYoutube($id, $name, $url)
     {
-        $group = createAdsYoutube::findOrFail($id);
-        $group->url = $url;
-        $group->name = $name;
-        $group->save();
-        return $group;
+        $ads_youtube = AdsYoutube::findOrFail($id);
+        $ads_youtube->url = $url;
+        $ads_youtube->name = $name;
+        $ads_youtube->save();
+        return $ads_youtube;
     }
 }

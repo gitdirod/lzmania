@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AdsYoutube;
-use App\Traits\ApiResponse;
+use App\Http\Requests\AdsYoutubeStoreRequest;
 use App\Http\Resources\AdsYoutubeCollection;
+use App\Models\AdsYoutube;
 use App\Services\AdsYoutubeService;
+use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 
 
@@ -43,9 +44,15 @@ class AdsYoutubeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AdsYoutubeStoreRequest $request)
     {
-        //
+        try {
+            $datos = $request->validated();
+            $adsYoutube = $this->adsYoutubeService->createAdsYoutube($datos['name'], $datos['url']);
+            return $this->successResponse('Ads Youtube creado.', $adsYoutube, 201);
+        } catch (\Exception $e) {
+            return $this->errorResponse('Error al crear el Ads Youtube.', $e->getMessage());
+        }
     }
 
     /**
