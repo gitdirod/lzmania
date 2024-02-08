@@ -75,7 +75,16 @@ class AdsYoutubeController extends Controller
      */
     public function update(Request $request, AdsYoutube $adsYoutube)
     {
-        //
+        // Aqui quedo para continuar
+        try {
+            $datos = $request->validated();
+            $group = $this->groupService->updateGroup($group->id, $datos['name']);
+            return $this->successResponse('Grupo actualizado.');
+        } catch (\Illuminate\Database\QueryException $e) {
+            return $this->errorResponse('Error al actualizar el grupo en base de datos.', $e->getMessage());
+        } catch (\Exception $e) {
+            return $this->errorResponse('Error inesperado al actualizar el grupo.', $e->getMessage());
+        }
     }
 
     /**

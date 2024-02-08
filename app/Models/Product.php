@@ -139,14 +139,29 @@ class Product extends Model
     }
     public function updatePrice()
     {
+        // Busca todos los productos comprados que coincidan con el ID del producto actual
+        // y los ordena de forma descendente por el ID de compra.
         $purchased_list = PurchaseProduct::where('product_id', $this->id)
             ->orderBy('purchase_id', 'desc')
             ->get();
 
-        $last_price = $purchased_list->first();
-        $this->price = $last_price->price;
+        // Verifica si la lista de productos comprados está vacía.
+        if ($purchased_list->isEmpty()) {
+            // Si la lista está vacía, establece el precio del producto a 0.
+            $this->price = 0;
+        } else {
+            // Si la lista no está vacía, obtiene el primer elemento de la lista,
+            // que corresponde al último producto comprado debido al ordenamiento previo.
+            $last_price = $purchased_list->first();
+            // Establece el precio del producto al precio del último producto comprado.
+            $this->price = $last_price->price;
+        }
+
+        // Guarda los cambios en el producto, ya sea que el precio haya sido actualizado
+        // o establecido a 0.
         $this->save();
     }
+
 
     public function insertImages(array $datos)
     {
