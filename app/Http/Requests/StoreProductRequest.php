@@ -31,6 +31,12 @@ class StoreProductRequest extends FormRequest
                 'string',
                 'max:255'
             ],
+            'discount' => [
+                'sometimes', // Usa 'sometimes' si el campo no es obligatorio en todas las solicitudes
+                'numeric', // Asegura que el campo sea numérico
+                'min:0', // Establece el valor mínimo permitido a 0
+                'max:100', // Establece el valor máximo permitido a 100
+            ],
             'code' => [
                 'required',
                 'unique:products',
@@ -95,6 +101,9 @@ class StoreProductRequest extends FormRequest
             'description.required' => 'Descripción es obligatoria.',
             'images.required' => 'Carga al menos una imagen.',
             'images.*.distinct' => 'Imagenes repetidas.',
+            'discount.numeric' => 'El descuento debe ser un número entre 0 y 100',
+            'discount.min' => 'El descuento debe ser mayor a 0%',
+            'discount.max' => 'El descuento debe ser menor a 100%',
         ];
     }
 }

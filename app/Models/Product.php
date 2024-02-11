@@ -34,7 +34,8 @@ class Product extends Model
         'code',
         'weight',
         'size',
-        'number_color'
+        'number_color',
+        'discount',
     ];
 
     public function category()
@@ -84,6 +85,7 @@ class Product extends Model
     {
         $this->name = $toUpdate["name"];
         $this->code = $toUpdate["code"];
+        $this->discount = $toUpdate["discount"];
         $this->category_id = $toUpdate["category"];
         $this->type_product_id = $toUpdate["type"];
         $this->description = $toUpdate["description"];

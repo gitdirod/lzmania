@@ -45,6 +45,7 @@ class ProductController extends Controller
         $product = Product::create([
             "name" => $datos["name"],
             "code" => $datos["code"],
+            "discount" => $datos["discount"],
             "category_id" => $datos["category"],
             "type_product_id" => $datos["type"],
             "description" => $datos["description"],
