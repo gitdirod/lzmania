@@ -20,20 +20,7 @@ class CategoryController extends Controller
     public function index()
     {
         return new CategoryCollection(Category::all());
-        // $categories = Category::all();
-        // $categories = $categories->map(function ($category) {
 
-        //     return [
-        //         'group_name' => $category->group->name,
-        //         'group_id' => $category->group->id,
-        //         'id' => $category->id,
-        //         'image' => $category->image,
-        //         'name'  => $category->name,
-        //         'images' => $category->images()->select('id', 'name')->get(),
-        //         'show' => $category->isShowed(),
-        //     ];
-        // });
-        // return response()->json(['data' => $categories]);
     }
 
     /**
