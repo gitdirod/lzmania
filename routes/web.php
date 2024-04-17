@@ -23,3 +23,14 @@ Route::get('/', function () {
 Route::get('/test', function () {
     return php_ini_loaded_file();
 });
+
+
+Route::get('/db-test', function () {
+    try {
+        \DB::connection()->getPdo();
+        return 'Conectado a la base de datos correctamente.';
+    } catch (\Exception $e) {
+        return 'No se pudo conectar a la base de datos: ' . $e->getMessage();
+    }
+});
+
