@@ -48,7 +48,7 @@ class Purchase extends Model
             $find_pro = Product::where('id', $product['id'])->first();
             if (isset($find_pro)) {
                 $pro = Product::find($product['id']);
-                $price = number_format((float)$product['price'], 2, '.', '');
+                $price = number_format((float)$product['price'], 3, '.', '');
 
                 $new = new PurchaseProduct;
                 $new->purchase_id = $this->id;
@@ -117,13 +117,13 @@ class Purchase extends Model
                 $pro = PurchaseProduct::find((int)$find_pro['id']);
                 $Array_products[] = ['pro' => $pro];
                 $pro->quantity = (int)$product['quantity'];
-                $price = number_format((float)$product['price'], 2, '.', '');
+                $price = number_format((float)$product['price'], 3, '.', '');
                 $pro->price = $price;
                 $pro->subtotal = $price * (int)$product['quantity'];
                 $pro->save();
             } else {
                 $new = new PurchaseProduct;
-                $price = number_format((float)$product['price'], 2, '.', '');
+                $price = number_format((float)$product['price'], 3, '.', '');
                 $new->purchase_id = $this->id;
                 $new->product_id = $product['id'];
                 $new->quantity = (int)$product['quantity'];
